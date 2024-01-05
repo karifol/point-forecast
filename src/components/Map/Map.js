@@ -2,14 +2,27 @@ import React, { useEffect } from 'react'
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-function Map() {
+function Map({ setLngLat }) {
   useEffect(() => {
-    mapboxgl.accessToken = 'pk.eyJ1Ijoia2FpdG8wNTAyIiwiYSI6ImNsNmRiZG42aTI2dzkzZW8xYnh6MjZ0ZTIifQ.x92zPsPkjOTIZTmLY-j4vA';
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v10',
       center: [139.767125, 35.681236],
       zoom: 8
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+    // クリックでマーカーを設置
+    map.on('click', (e) => {
+      if (window.marker) {
+        window.marker.remove();
+      }
+      window.marker = new mapboxgl.Marker()
+        .setLngLat(e.lngLat)
+        .addTo(map);
+      const lng = Math.round(e.lngLat.lng * 10000) / 10000;
+      const lat = Math.round(e.lngLat.lat * 10000) / 10000;
+      setLngLat({ lng, lat });
     });
   }, [])
   return (
