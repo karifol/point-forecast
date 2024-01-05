@@ -1,23 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
+import Map from './components/Map/Map.js';
+import Title from './components/Title/Title.js';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='w-screen h-screen flex flex-col items-center '>
+        <Title text={ "PinPoint予報" } />
+        <div className='w-9/12 h-4/6'>
+          <Map />
+        </div>
+      </div>
     </div>
   );
 }
