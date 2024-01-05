@@ -5,7 +5,8 @@ function Title({ text }) {
     <div className='
         w-full h-20
         flex items-center justify-center
-        text-5xl'
+        bg-black
+        text-5xl text-gray-200'
       >
       {text}
     </div>
