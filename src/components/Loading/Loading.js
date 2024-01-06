@@ -29,6 +29,7 @@ function Loading() {
         w-screen h-screen
         flex justify-center items-center
         text-5xl
+        bg-black text-gray-200
       '
     >{text}</div>
   )

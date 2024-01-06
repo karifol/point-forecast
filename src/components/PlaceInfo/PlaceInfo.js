@@ -5,15 +5,15 @@ function PlaceInfo({placeName, lat, lng }) {
     <div
       className='
         w-full h-40
-        flex items-center justify-center
+        flex items-center justify-center flex-col
         bg-black
-        text-3xl text-gray-200'
+        text-2xl text-gray-200'
     >
+      <div
+        className='text-xl'
+      >{placeName}</div>
       <table>
         <tbody>
-          <tr>
-            <td colSpan={2}>{ placeName }</td>
-          </tr>
           <tr>
             <td>緯度：</td>
             <td>{ lat }</td>

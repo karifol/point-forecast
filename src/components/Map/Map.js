@@ -1,39 +1,89 @@
-import React, { useEffect } from 'react'
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useRef, useEffect, useState } from 'react';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
+import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 
-function Map({ setLngLat }) {
+function Map({ placeInfo, setPlaceInfo, setIsMapLoading }) {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+
   useEffect(() => {
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v10',
-      center: [139.767125, 35.681236],
-      zoom: 8
+    if (map.current) return; // initialize map only once
+    map.current = new maplibregl.Map({
+      container: mapContainer.current,
+      style: {
+        version: 8,
+        sources: {
+            rtile: {
+                type: 'raster',
+                tiles: [
+                    'https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+                ],
+                tileSize: 256,
+                attribution:
+                    '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+            },
+        },
+        layers: [
+            {
+                id: 'raster-tiles',
+                type: 'raster',
+                source: 'rtile',
+                minzoom: 0,
+                maxzoom: 22,
+            },
+        ],
+    },
+      center: [placeInfo.lng, placeInfo.lat],
+      zoom: placeInfo.zoom,
     });
-    map.addControl(new mapboxgl.NavigationControl());
     // クリックでマーカーを設置
-    map.on('click', (e) => {
+    map.current.on('click', async (e) => {
       if (window.marker) {
         window.marker.remove();
       }
-      window.marker = new mapboxgl.Marker()
-        .setLngLat(e.lngLat)
-        .addTo(map);
-      const lng = Math.round(e.lngLat.lng * 10000) / 10000;
-      const lat = Math.round(e.lngLat.lat * 10000) / 10000;
-      setLngLat({ lng, lat });
+      setIsMapLoading(true);
+      const lngLat = e.lngLat;
+      window.marker =  new maplibregl.Marker()
+        .setLngLat(lngLat)
+        .addTo(map.current);
+      const lng = Math.round(lngLat.lng * 10000) / 10000;
+      const lat = Math.round(lngLat.lat * 10000) / 10000;
+
+      const address = await reverseGeocode(lng, lat);
+      setPlaceInfo({
+        ...placeInfo,
+        lng,
+        lat,
+        name: address,
+        zoom: map.current.getZoom()
+      });
+      setIsMapLoading(false);
     });
-  }, [])
+  }, []);
+
   return (
-    <div 
+    <div
+      ref={mapContainer}
       id="map"
       className='
         w-full h-full
-        rounded-lg'
+        rounded-lg
+        map
+        '
     >
     </div>
   )
+}
+
+const reverseGeocode = async (lng, lat) => {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const displayName = data.display_name;
+  const text = displayName
+  return text;
 }
 
 export default Map
