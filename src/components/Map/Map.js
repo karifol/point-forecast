@@ -1,9 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
-import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
-
 function Map({ placeInfo, setPlaceInfo, setIsMapLoading }) {
   const mapContainer = useRef(null);
   const map = useRef(null);
