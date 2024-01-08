@@ -2,12 +2,14 @@ import React from 'react'
 import Chart from 'chart.js/auto'
 import { useEffect } from 'react'
 
-function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, setDateArray}) {
+
+function EnsModelChart({ placeInfo, date, setDate, data, setData, dateArray, setDateArray}) {
   useEffect(() => {
     const extractForecast = async () => {
       const obj = await fetchForecast(placeInfo.lat, placeInfo.lng)
       // 日ごとに分ける
       const dayObj = {}
+      console.log(obj)
       for (let i = 0; i < obj['hourly']['time'].length; i++) {
         const date = new Date(obj['hourly']['time'][i])
         date.setHours(date.getHours() + 9)
@@ -17,12 +19,11 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
         if (dayObj[dayStr] === undefined) {
           dayObj[dayStr] = {
             'hour': [],
-            'msm': [],
-            'gsm': [],
-            'ecmwf': [],
-            'gfs' : [],
-            'icon': [],
-            'gem': [],
+            'icon': {},
+            'ecmwf': {},
+            'gfs' : {},
+            'gem': {},
+            'bom': {},
           }
         }
         dayObj[dayStr]["msm"].push(obj['hourly']['temperature_2m_jma_msm'][i])
@@ -54,18 +55,18 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
   return (
     <div
       className='
-        w-9/12 h-full
+        w-9/12
         flex flex-col items-center
         m-0 p-0
       '
-      id = 'canvasContainer'
+      id = 'ensCanvasContainer'
     >
     </div>
   )
 }
 
 const fetchForecast = async (lat, lng) => {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m&wind_speed_unit=ms&models=ecmwf_ifs04,gfs_global,jma_msm,jma_gsm,icon_global,gem_global`
+  const url = `https://ensemble-api.open-meteo.com/v1/ensemble?latitude=${lat}&longitude=${lng}&hourly=temperature_2m&wind_speed_unit=ms&models=icon_global,gfs025,ecmwf_ifs04,gem_global,bom_access_global_ensemble`
   const obj = await fetch(url)
     .then(res => res.json())
   return obj
@@ -73,7 +74,7 @@ const fetchForecast = async (lat, lng) => {
 
 const drawGraph = (dayObj, day) => {
   const obj = dayObj[day]
-  const canvasContainer = document.getElementById('canvasContainer')
+  const canvasContainer = document.getElementById('ensCanvasContainer')
   // canvasWrapperを作成
   const canvasWrapper = document.createElement('div')
   canvasWrapper.className = 'w-full h-96 flex items-center justify-center'
@@ -82,10 +83,10 @@ const drawGraph = (dayObj, day) => {
   // canvasを作成
   const canvas = document.createElement('canvas')
   canvas.className = 'w-full h-full'
-  canvas.id = `canvas${day}`
+  canvas.id = `ensCanvas${day}`
   canvasWrapper.appendChild(canvas)
   // グラフを描画
-  const ctx = document.getElementById(`canvas${day}`).getContext('2d')
+  const ctx = document.getElementById(`ensCanvas${day}`).getContext('2d')
 
   const chart = new Chart(ctx, {
     type: 'line',
@@ -168,4 +169,4 @@ const drawGraph = (dayObj, day) => {
   })
 }
 
-export default SingleModelChart
+export default EnsModelChart

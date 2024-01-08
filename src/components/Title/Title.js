@@ -1,12 +1,20 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
 
-function Title({ text }) {
+function Title({ text, fontSize }) {
+  useEffect(() => {
+    const title = document.getElementById('title')
+    title.style.fontSize = fontSize
+  }, [])
   return (
-    <div className='
+    <div
+      id='title'
+      className='
         w-full h-20
         flex items-center justify-center
         bg-black
-        text-5xl text-gray-200'
+        bold
+        text-gray-200'
       >
       {text}
     </div>
