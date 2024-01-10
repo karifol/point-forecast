@@ -1,8 +1,10 @@
 import React from 'react'
 import Chart from 'chart.js/auto'
-import { useEffect } from 'react'
+import Loading from '../Loading/Loading.js'
+import { useState, useEffect } from 'react'
 
 function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, setDateArray}) {
+  const [isLoad, setIsLoad] = useState(false)
   useEffect(() => {
     const extractForecast = async () => {
       const obj = await fetchForecast(placeInfo.lat, placeInfo.lng)
@@ -45,22 +47,30 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
   }, [])
 
   useEffect(() => {
+    setIsLoad(true)
     const canvasContainer = document.getElementById('canvasContainer')
     canvasContainer.innerHTML = ''
-    if (date === '') return
+    if (date === '') {
+      setIsLoad(false)
+      return
+    }
     drawGraph(data, date)
+    setIsLoad(false)
   }, [date])
 
   return (
-    <div
-      className='
-        w-9/12 h-full
-        flex flex-col items-center
-        m-0 p-0
-      '
-      id = 'canvasContainer'
-    >
-    </div>
+    <>
+      { isLoad ? ( <Loading /> ) : (<></>) }
+      <div
+        className='
+          w-9/12 h-full
+          flex flex-col items-center
+          m-0 p-0
+          '
+        id = 'canvasContainer'
+      >
+      </div>
+    </>
   )
 }
 
@@ -161,6 +171,13 @@ const drawGraph = (dayObj, day) => {
         legend: {
           labels: {
             color: '#ffffff',
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': ' + context.formattedValue + '℃'
+            }
           }
         }
       }

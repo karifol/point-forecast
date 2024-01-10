@@ -30,6 +30,7 @@ function Loading() {
         flex justify-center items-center
         text-5xl
         bg-black text-gray-200
+        absolute z-10
       '
     >{text}</div>
   )
