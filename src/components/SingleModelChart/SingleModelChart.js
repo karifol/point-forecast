@@ -38,10 +38,12 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
       setData(dayObj)
       setDateArray(Object.keys(dayObj))
       // グラフを描画
-      for (let day in dayObj) {
-        drawGraph(dayObj, day)
-        break
-      }
+      // for (let day in dayObj) {
+      //   console.log(day)
+      //   drawGraph(dayObj, day)
+      //   break
+      // }
+      drawGraph(dayObj, Object.keys(dayObj)[1])
     }
     extractForecast()
   }, [])
@@ -54,7 +56,8 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
       setIsLoad(false)
       return
     }
-    drawGraph(data, date)
+    updateChart(window.CHART, data[date])
+    // window.CHART.update()
     setIsLoad(false)
   }, [date])
 
@@ -81,6 +84,25 @@ const fetchForecast = async (lat, lng) => {
   return obj
 }
 
+const updateChart = (chart, data) => {
+  console.log(chart)
+  console.log(data)
+  chart.data.datasets[0].data = data['msm']
+  chart.data.datasets[1].data = data['gsm']
+  chart.data.datasets[2].data = data['ecmwf']
+  chart.data.datasets[3].data = data['gfs']
+  chart.data.datasets[4].data = data['icon']
+  chart.data.datasets[5].data = data['gem']
+  // chart.data.datasets[0].data = chart.data.datasets[1].data
+  // chart.data.datasets[1].data = chart.data.datasets[2].data
+  // chart.data.datasets[2].data = chart.data.datasets[3].data
+  // chart.data.datasets[3].data = chart.data.datasets[4].data
+  // chart.data.datasets[4].data = chart.data.datasets[5].data
+  // chart.data.datasets[5].data = chart.data.datasets[0].data
+  console.log(chart)
+  chart.update()
+}
+
 const drawGraph = (dayObj, day) => {
   const obj = dayObj[day]
   const canvasContainer = document.getElementById('canvasContainer')
@@ -97,7 +119,7 @@ const drawGraph = (dayObj, day) => {
   // グラフを描画
   const ctx = document.getElementById(`canvas${day}`).getContext('2d')
 
-  const chart = new Chart(ctx, {
+  window.CHART = new Chart(ctx, {
     type: 'line',
     data: {
       labels: obj['hour'],
