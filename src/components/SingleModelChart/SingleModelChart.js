@@ -87,8 +87,10 @@ const drawGraph = (dayObj, day) => {
   canvasContainer.appendChild(canvasWrapper)
   // canvasを作成
   const canvas = document.createElement('canvas')
-  canvas.height = 350
-  canvas.width = 370
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
+  canvas.height = windowHeight * 0.5
+  canvas.width = windowWidth * 0.9
   canvas.id = `canvas${day}`
   canvasWrapper.appendChild(canvas)
   // グラフを描画
