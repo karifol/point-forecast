@@ -41,24 +41,29 @@ function Map({ placeInfo, setPlaceInfo, setIsMapLoading }) {
         window.marker.remove();
       }
       setIsMapLoading(true);
-      const lngLat = e.lngLat;
-      window.marker =  new maplibregl.Marker()
-        .setLngLat(lngLat)
-        .addTo(map.current);
-      const lng = Math.round(lngLat.lng * 10000) / 10000;
-      const lat = Math.round(lngLat.lat * 10000) / 10000;
-
-      const address = await reverseGeocode(lng, lat);
-      setPlaceInfo({
-        ...placeInfo,
-        lng,
-        lat,
-        name: address,
-        zoom: map.current.getZoom()
-      });
+      await update(e);
       setIsMapLoading(false);
     });
+    update({ lngLat: { lng: placeInfo.lng, lat: placeInfo.lat } });
   }, []);
+
+  const update = async (e) => {
+    const lngLat = e.lngLat;
+    window.marker =  new maplibregl.Marker()
+      .setLngLat(lngLat)
+      .addTo(map.current);
+    const lng = Math.round(lngLat.lng * 10000) / 10000;
+    const lat = Math.round(lngLat.lat * 10000) / 10000;
+  
+    const address = await reverseGeocode(lng, lat);
+    setPlaceInfo({
+      ...placeInfo,
+      lng,
+      lat,
+      name: address,
+      zoom: map.current.getZoom()
+    });
+  }
 
   return (
     <div
@@ -82,5 +87,7 @@ const reverseGeocode = async (lng, lat) => {
   const text = displayName
   return text;
 }
+
+
 
 export default Map

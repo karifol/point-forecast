@@ -15,7 +15,7 @@ function Button({ setPage }) {
       '
       onClick={ () => setPage("forecast")}
     >
-      予報を見る
+      予測を見る
     </div>
   )
 }

@@ -8,7 +8,7 @@ function App() {
     lng: 139.767125,
     lat: 35.681236,
     zoom: 9,
-    name: '東京' 
+    name: '-'
   });
   const [isMapLoading, setIsMapLoading] = useState(false);
   const [page, setPage] = useState("title");
