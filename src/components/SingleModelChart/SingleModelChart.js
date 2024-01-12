@@ -37,12 +37,6 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
       }
       setData(dayObj)
       setDateArray(Object.keys(dayObj))
-      // グラフを描画
-      // for (let day in dayObj) {
-      //   console.log(day)
-      //   drawGraph(dayObj, day)
-      //   break
-      // }
       drawGraph(dayObj, Object.keys(dayObj)[1])
     }
     extractForecast()
@@ -56,8 +50,7 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
       setIsLoad(false)
       return
     }
-    updateChart(window.CHART, data[date])
-    // window.CHART.update()
+    drawGraph(data, date)
     setIsLoad(false)
   }, [date])
 
@@ -66,7 +59,7 @@ function SingleModelChart({ placeInfo, date, setDate, data, setData, dateArray, 
       { isLoad ? ( <Loading /> ) : (<></>) }
       <div
         className='
-          w-9/12 h-full
+          w-screen
           flex flex-col items-center
           m-0 p-0
           '
@@ -84,36 +77,18 @@ const fetchForecast = async (lat, lng) => {
   return obj
 }
 
-const updateChart = (chart, data) => {
-  console.log(chart)
-  console.log(data)
-  chart.data.datasets[0].data = data['msm']
-  chart.data.datasets[1].data = data['gsm']
-  chart.data.datasets[2].data = data['ecmwf']
-  chart.data.datasets[3].data = data['gfs']
-  chart.data.datasets[4].data = data['icon']
-  chart.data.datasets[5].data = data['gem']
-  // chart.data.datasets[0].data = chart.data.datasets[1].data
-  // chart.data.datasets[1].data = chart.data.datasets[2].data
-  // chart.data.datasets[2].data = chart.data.datasets[3].data
-  // chart.data.datasets[3].data = chart.data.datasets[4].data
-  // chart.data.datasets[4].data = chart.data.datasets[5].data
-  // chart.data.datasets[5].data = chart.data.datasets[0].data
-  console.log(chart)
-  chart.update()
-}
-
 const drawGraph = (dayObj, day) => {
   const obj = dayObj[day]
   const canvasContainer = document.getElementById('canvasContainer')
   // canvasWrapperを作成
   const canvasWrapper = document.createElement('div')
-  canvasWrapper.className = 'w-full h-96 flex items-center justify-center'
+  canvasWrapper.className = 'w-ful flex items-center justify-center'
   canvasWrapper.id = `canvasWrapper${day}`
   canvasContainer.appendChild(canvasWrapper)
   // canvasを作成
   const canvas = document.createElement('canvas')
-  canvas.className = 'w-full h-full'
+  canvas.height = 350
+  canvas.width = 370
   canvas.id = `canvas${day}`
   canvasWrapper.appendChild(canvas)
   // グラフを描画
@@ -162,8 +137,10 @@ const drawGraph = (dayObj, day) => {
         }
       ]
     },
+    // 
     options: {
       scales: {
+        maintainAspectRatio: false,
         y: {
           ticks: {
             callback: function(value, index, values) {
@@ -178,7 +155,10 @@ const drawGraph = (dayObj, day) => {
         x: {
           ticks: {
             callback: function(value, index, values) {
-              if (value % 3 === 0) {
+              if (value % 6 === 0) {
+                return value + '時'
+              }
+              if (value == 23){
                 return value + '時'
               }
             },

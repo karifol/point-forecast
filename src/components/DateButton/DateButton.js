@@ -4,7 +4,7 @@ function DateButton({ dateArray, setDate }) {
   return (
     <div 
       className='
-        m-5
+        m-2
       '
     >
       {
@@ -12,10 +12,10 @@ function DateButton({ dateArray, setDate }) {
           return (
             <button
               className='
-                w-20 h-10
+                w-16 h-10
                 m-2 p-0
                 border-2 border-white rounded-full
-                text-white text-2xl
+                text-white
                 hover:bg-white hover:text-black
               '
               key={index}

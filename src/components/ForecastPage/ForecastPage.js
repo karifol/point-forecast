@@ -26,10 +26,10 @@ function ForecastPage({ placeInfo }) {
     >
       <Title
         text = { placeInfo.name }
-        fontSize='2rem'
+        fontSize='1.5rem'
       />
       <ContentTitle
-        text='Multi Model Forecast' 
+        text='Temperature' 
       />
       <DateButton 
         dateArray = { dateArray }
@@ -44,25 +44,6 @@ function ForecastPage({ placeInfo }) {
         dateArray = { dateArray }
         setDateArray = { setDateArray }
       />
-      {/* <div 
-        className='m-5'
-      />
-      <ContentTitle
-        text='Ensemble Model Forecast'
-      />
-      <DateButton 
-        dateArray = { ensDateArray }
-        setDate   = { setEnsDate }
-      />
-      <EnsModelChart
-        placeInfo = { placeInfo }
-        date = { ensDate }
-        setDate = { setEnsDate }
-        data = { ensData }
-        setData = { setEnsData }
-        dateArray = { ensDateArray }
-        setDateArray = { setEnsDateArray }
-      /> */}
     </div>
     </>
 

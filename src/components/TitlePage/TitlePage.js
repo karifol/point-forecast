@@ -10,19 +10,20 @@ function TitlePage( { placeInfo, setPlaceInfo, isMapLoading, setIsMapLoading, se
     <div className='w-screen h-screen flex flex-col items-center bg-black'>
       <Title
         text={ "Pin Point Forecast" }
-        fontSize={ "4rem" }
+        fontSize={ "3rem" }
       />
-      <PlaceInfo
-        placeName={ placeInfo.name }
-        lat={ placeInfo.lat }
-        lng={ placeInfo.lng }
-      />
-      <Button setPage={ setPage } />
-      <div className='w-9/12 h-4/6'>
+      <div
+        className='w-9/12 h-32 flex items-center justify-center'
+      >
+        <PlaceInfo
+          placeName={ placeInfo.name }
+        />
+      </div>
+      <div className='w-9/12 h-1/2'>
         {
           isMapLoading ? (
             <div
-              className='w-9/12 h-4/6 flex items-center justify-center absolute z-10'
+              className='w-9/12 h-1/2 flex items-center justify-center absolute z-10'
             >
               <LoadingMap />
             </div>
@@ -35,6 +36,11 @@ function TitlePage( { placeInfo, setPlaceInfo, isMapLoading, setIsMapLoading, se
             setIsMapLoading={ setIsMapLoading }
           />
         </div>
+      </div>
+      <div 
+        className='mt-5'
+      >
+        <Button setPage={ setPage } />
       </div>
     </div>
   )
