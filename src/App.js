@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 function App() {
   const [placeInfo, setPlaceInfo] = useState({
-    lng: 139.767125,
-    lat: 35.681236,
+    lng: 139.7,
+    lat: 35.6,
     zoom: 9,
     name: '-'
   });
